@@ -93,21 +93,16 @@ def matrix_solutions(B,E):
     return solutions
 
 
-def div_min_val(M,E,uniformizer):
-    p_val = E.valuation(uniformizer)
-    minval = min(p_val(M[i,j]) for i in range(M.nrows()) for j in range(M.ncols()))
-    return set_im(M/(uniformizer**minval))
 
-
-def get_stab(g,E,p):
+def get_stab(g,E,div_min_val):
     
     stage_matrices = create_stage_matrices(E)
 
-    J = div_min_val(g.H*g,E,p)
+    J = div_min_val(g.H*g)
     B,W = reduce_trace(J,stage_matrices)
     solutions = matrix_solutions(B,E)
     J_solutions = [W*sol*W**-1 for sol in solutions]
-    g_stab = {set_im(div_min_val(g*h*g**-1,E,p)) for h in J_solutions}
+    g_stab = {set_im(div_min_val(g*h*g**-1)) for h in J_solutions}
     return g_stab
     
 
